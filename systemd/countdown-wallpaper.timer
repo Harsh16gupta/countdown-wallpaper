@@ -1,0 +1,11 @@
+[Unit]
+Description=Daily update timer for 90-day countdown wallpaper
+
+[Timer]
+OnCalendar=*-*-* 00:00:05
+OnCalendar=hourly
+OnStartupSec=10s
+Persistent=true
+
+[Install]
+WantedBy=timers.target

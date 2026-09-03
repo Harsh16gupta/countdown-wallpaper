@@ -1,0 +1,9 @@
+[Unit]
+Description=Update 90-day countdown wallpaper
+After=graphical-session.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/python3 /home/harsh-gupta/.local/share/countdown-wallpaper/countdown_wallpaper.py
+StandardOutput=journal
+StandardError=journal
