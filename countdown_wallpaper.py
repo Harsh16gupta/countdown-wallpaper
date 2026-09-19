@@ -50,45 +50,21 @@ def render_wallpaper(days_left: int, output_path: Path, width: int = 3840, heigh
     img = Image.new("RGB", (width, height), color=(0, 0, 0))
     draw = ImageDraw.Draw(img)
 
-    num_font = find_font(420)
-    label_font = find_font(78)
-
+    num_font = find_font(440)
     num_str = str(days_left)
-    label_text = "DAYS LEFT" if days_left != 1 else "DAY LEFT"
-    track_spacing = 18
 
     # Measure number dimensions
     bbox_num = draw.textbbox((0, 0), num_str, font=num_font)
     w_num = bbox_num[2] - bbox_num[0]
     h_num = bbox_num[3] - bbox_num[1]
 
-    # Measure tracked label dimensions
-    char_metrics = []
-    for ch in label_text:
-        bb = draw.textbbox((0, 0), ch, font=label_font)
-        char_metrics.append((ch, bb[2] - bb[0], bb[3] - bb[1], bb[0], bb[1]))
-
-    total_w_label = sum(m[1] for m in char_metrics) + track_spacing * (len(label_text) - 1)
-    max_h_label = max(m[2] for m in char_metrics)
-
-    spacing = 55
-    total_h = h_num + spacing + max_h_label
-
     center_x = width // 2
     center_y = height // 2
-    start_y = center_y - (total_h // 2)
 
-    # Position and draw number
+    # Center number both horizontally and vertically
     x_num = center_x - (w_num // 2) - bbox_num[0]
-    y_num = start_y - bbox_num[1]
+    y_num = center_y - (h_num // 2) - bbox_num[1]
     draw.text((x_num, y_num), num_str, fill=(255, 255, 255), font=num_font)
-
-    # Position and draw tracked subtitle
-    curr_x = center_x - (total_w_label // 2)
-    y_label_base = start_y + h_num + spacing
-    for ch, cw, _, x_off, y_off in char_metrics:
-        draw.text((curr_x - x_off, y_label_base - y_off), ch, fill=(215, 215, 215), font=label_font)
-        curr_x += cw + track_spacing
 
     output_path.parent.mkdir(parents=True, exist_ok=True)
     img.save(output_path, "PNG", optimize=True)
